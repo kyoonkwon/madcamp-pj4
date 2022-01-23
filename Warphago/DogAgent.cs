@@ -7,7 +7,12 @@ public class DogAgent : Agent
 {
 
     // The target the dog will run towards.
-    public Transform target; 
+    public Transform target;
+    public Transform head;
+
+    public GameObject stick;
+    public GameObject mouseStick;
+    public Transform returnPoint;
 
     // These items should be set in the inspector
     [Header("Body Parts")] 
@@ -52,14 +57,28 @@ public class DogAgent : Agent
         jdController.SetupBodyPart(leg2_lower);
         jdController.SetupBodyPart(leg3_upper);
         jdController.SetupBodyPart(leg3_lower);
+
+        runningToItem = false;
     }
 
     public override void OnEpisodeBegin()
     {
         // Move the target to a new spot
-        target.localPosition = new Vector3(Random.value * 16 - 8f,
-                                           Random.value * 10 - 2f,
-                                           1.13f);
+        if(!runningToItem){
+            stick.SetActive(true);
+            mouseStick.SetActive(false);
+            target = stick.transform;
+            target.localPosition = new Vector3(Random.value * 16 - 8f,
+                                            Random.value * 10 - 2f,
+                                            1.13f);
+            runningToItem = true;
+        } else
+        {
+            stick.SetActive(false);
+            mouseStick.SetActive(true);
+            target = returnPoint;
+            runningToItem = false;
+        }
     }
 
     public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
@@ -104,6 +123,7 @@ public class DogAgent : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
+
         var bpDict = jdController.bodyPartsDict;
       
         // Update joint drive target rotation
@@ -130,13 +150,15 @@ public class DogAgent : Agent
 
         UpdateDirToTarget();
 
-        RotateBody(rotateBodyActionValue);
         // Reached target
         if (dirToTarget.magnitude < 1.5f)
         {
             AddReward(1.0f);
             EndEpisode();
-        }
+        } 
+        
+        RotateBody(rotateBodyActionValue);
+        RotateHead();
 
         // Energy Conservation
         // The dog is penalized by how strongly it rotates towards the target.
@@ -168,6 +190,16 @@ public class DogAgent : Agent
     void RewardFunctionTimePenalty()
     {
         AddReward(- 0.001f);  //-0.001f chosen by experimentation.
+    }
+
+    void RotateHead()
+    {
+        float speed = 2.0f;
+        Vector3 targetDirection = target.position - head.transform.position;
+        float singleStep = speed * Time.deltaTime;
+        Vector3 newDirection = Vector3.RotateTowards(head.transform.forward, targetDirection, singleStep, 0.0f);
+        Debug.DrawRay(head.transform.position, newDirection, Color.red);
+        head.transform.rotation = Quaternion.LookRotation(newDirection);
     }
 
     public override void Heuristic(float[] actionsOut)
