@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1027408679064",
+    "firebase_url": "https://warphago-default-rtdb.firebaseio.com",
+    "project_id": "warphago",
+    "storage_bucket": "warphago.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027408679064:android:22d897383b7905b3bb00ed",
+        "android_client_info": {
+          "package_name": "com.defaultcompany.walwal2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027408679064-2kqmb1v5vouepj0mdbsn4m1j23sbiofp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEQGVCHaPGVODfPai-7I4aZDsyzj2p4kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027408679064-2kqmb1v5vouepj0mdbsn4m1j23sbiofp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
